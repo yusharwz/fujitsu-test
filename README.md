@@ -1,6 +1,6 @@
-# TEST FUJITSU ROLE .NET BY YUSHAR WAHIDIN ZAMZAM
+## TEST FUJITSU ROLE .NET BY YUSHAR WAHIDIN ZAMZAM
 
-## Terima kasih telah menyempatkan melihat jawaban dari 3 soal yang diberikan untuk tes kemampuan programming. Saya sangat senang jika bisa diberi kesempatan bergabung pada tim programming fujitsu
+#### Terima kasih telah menyempatkan melihat jawaban dari 3 soal yang diberikan untuk tes kemampuan programming. Saya sangat senang jika bisa diberi kesempatan bergabung pada tim programming fujitsu
 
 ### Berikut poin yang harus diperhatikan untuk mengetes/running aplikasi ini
 
