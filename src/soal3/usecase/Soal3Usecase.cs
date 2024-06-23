@@ -423,7 +423,7 @@ namespace WarehouseManagement
             }
 
             DateTime? expiredDate = null;
-            Console.Write("Enter Expired Date (YYYY-MM-DD): ");
+            Console.Write("Enter Expired Date (YYYY-MM-DD) (Default Current Time): ");
             string expiredDateString = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(expiredDateString))
             {
