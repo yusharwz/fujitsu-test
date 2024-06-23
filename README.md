@@ -12,4 +12,4 @@
 
 ##### website portofolio: https://www.yusharwz.my.id
 
-##### CV: https://www.yusharwz.my.id/CV-Yushar Wahidin Zamzam.pdf
+##### CV: https://www.yusharwz.my.id/CV-Yushar%20Wahidin%20Zamzam.pdf
