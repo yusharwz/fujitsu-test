@@ -9,7 +9,6 @@ namespace WarehouseManagement
         public string NamaGudang { get; set; } = string.Empty;
     }
 
-
     public class Barang
     {
         public int KodeBarang { get; set; }
@@ -19,7 +18,6 @@ namespace WarehouseManagement
         public DateTime TanggalKadaluarsa { get; set; }
         public int KodeGudang { get; set; }
     }
-
 
     public class WarehouseRepo
     {
@@ -143,7 +141,6 @@ namespace WarehouseManagement
         }
     }
 
-
     public class ItemRepo
     {
         private readonly string _connectionString;
@@ -247,7 +244,6 @@ namespace WarehouseManagement
             }
         }
     }
-
 
     public class MonitoringRepo
     {

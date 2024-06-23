@@ -57,7 +57,8 @@ EXECUTE FUNCTION trg_periksa_kadaluarsa();
 
 
 /* Data Dummy */
-INSERT INTO Gudang (NamaGudang) VALUES
+INSERT INTO Gudang (NamaGudang)
+VALUES
 ('Gudang A'),
 ('Gudang B'),
 ('Gudang C'),
@@ -71,13 +72,13 @@ INSERT INTO Gudang (NamaGudang) VALUES
 
 INSERT INTO Barang (NamaBarang, HargaBarang, JumlahBarang, TanggalKadaluarsa, KodeGudang) 
 VALUES 
-    ('Pena', 1.50, 100, '2024-12-31', 1), 
-    ('Buku', 5.75, 50, '2025-06-30', 2), 
-    ('Pensil', 0.75, 200, '2024-08-15', 3), 
-    ('Penghapus', 0.50, 150, '2024-09-30', 1), 
-    ('Bolpoin', 2.00, 80, '2025-01-31', 4), 
-    ('Kertas', 4.25, 1000, '2024-12-01', 2), 
-    ('Cutter', 3.50, 30, '2024-07-31', 5), 
-    ('Stapler', 8.50, 25, '2024-11-15', 3), 
-    ('Gunting', 2.75, 60, '2024-10-10', 2), 
-    ('Lem', 1.25, 120, '2024-09-01', 1);
+('Pena', 1.50, 100, '2024-12-31', 1), 
+('Buku', 5.75, 50, '2025-06-30', 2), 
+('Pensil', 0.75, 200, '2024-08-15', 3), 
+('Penghapus', 0.50, 150, '2024-09-30', 1), 
+('Bolpoin', 2.00, 80, '2025-01-31', 4), 
+('Kertas', 4.25, 1000, '2024-12-01', 2), 
+('Cutter', 3.50, 30, '2024-07-31', 5), 
+('Stapler', 8.50, 25, '2024-11-15', 3), 
+('Gunting', 2.75, 60, '2024-10-10', 2), 
+('Lem', 1.25, 120, '2024-09-01', 1);
