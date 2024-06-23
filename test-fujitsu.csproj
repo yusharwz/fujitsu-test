@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>test_fujitsu</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.44"/>
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.6"/>
+    <PackageReference Include="SqlConnection" Version="1.0.4"/>
+    <PackageReference Include="Npgsql" Version="8.0.3"/>
+    <PackageReference Include="DotNetEnv" Version="3.0.0"/>
+  </ItemGroup>
+</Project>
