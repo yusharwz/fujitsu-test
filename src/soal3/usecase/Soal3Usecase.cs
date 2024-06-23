@@ -1,473 +1,463 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace WarehouseManagement
 {
-   
-      public class Usecase
+   public class Usecase
+   {
+      public static void GetWarehouse(WarehouseRepo warehouseService)
       {
-         public static void GetWarehouse(WarehouseRepo warehouseService)
-         {
-            Console.Write("Enter Warehouse Code (leave empty to display all): ");
-            string input = Console.ReadLine();
+         Console.Write("Masukkan Kode Gudang (biarkan kosong untuk menampilkan semua): ");
+         string input = Console.ReadLine();
 
-            if (string.IsNullOrWhiteSpace(input))
+         if (string.IsNullOrWhiteSpace(input))
+         {
+            var warehouses = warehouseService.GetAllWarehouses();
+            foreach (var warehouse in warehouses)
             {
-               var warehouses = warehouseService.GetAllWarehouses();
-               foreach (var warehouse in warehouses)
-               {
-                     Console.WriteLine($"Warehouse Code: {warehouse.KodeGudang}, Warehouse Name: {warehouse.NamaGudang}");
-               }
-            }
-            else if (int.TryParse(input, out int warehouseCode))
-            {
-               var warehouse = warehouseService.GetWarehouse(warehouseCode);
-               if (warehouse != null)
-               {
-                     Console.WriteLine($"Warehouse Code: {warehouse.KodeGudang}, Warehouse Name: {warehouse.NamaGudang}");
-               }
-               else
-               {
-                     Console.WriteLine("Warehouse not found.");
-               }
-            }
-            else
-            {
-               Console.WriteLine("Invalid Warehouse Code.");
+               Console.WriteLine($"Kode Gudang: {warehouse.KodeGudang}, Nama Gudang: {warehouse.NamaGudang}");
             }
          }
-
-         public static void AddWarehouse(WarehouseRepo warehouseService)
+         else if (int.TryParse(input, out int kodeGudang))
          {
-            Console.WriteLine("\n=== Add Warehouse ===");
-
-            string warehouseName;
-            do
-            {
-               Console.Write("Enter Warehouse Name: ");
-               warehouseName = Console.ReadLine();
-               if (string.IsNullOrWhiteSpace(warehouseName))
-               {
-                  Console.WriteLine("Warehouse name cannot be empty. Please enter a valid name.");
-               }
-            } while (string.IsNullOrWhiteSpace(warehouseName));
-
-            var newWarehouse = new Gudang { NamaGudang = warehouseName };
-            warehouseService.AddWarehouse(newWarehouse);
-
-            var warehouse = warehouseService.GetWarehouse(newWarehouse.KodeGudang);
+            var warehouse = warehouseService.GetWarehouse(kodeGudang);
             if (warehouse != null)
             {
-               Console.WriteLine($"Added Warehouse: WarehouseCode: {warehouse.KodeGudang}, WarehouseName: {warehouse.NamaGudang}");
+               Console.WriteLine($"Kode Gudang: {warehouse.KodeGudang}, Nama Gudang: {warehouse.NamaGudang}");
             }
             else
             {
-               Console.WriteLine("Warehouse not found or could not be retrieved.");
+               Console.WriteLine("Gudang tidak ditemukan.");
             }
          }
-
-         public static void UpdateWarehouse(WarehouseRepo warehouseService)
+         else
          {
-            Console.WriteLine("\n=== Update Warehouse ===");
-            Console.Write("Enter Warehouse Code to update: ");
-            int warehouseCode;
-            while (!int.TryParse(Console.ReadLine(), out warehouseCode))
+            Console.WriteLine("Kode Gudang tidak valid.");
+         }
+      }
+
+      public static void AddWarehouse(WarehouseRepo warehouseService)
+      {
+         Console.WriteLine("\n=== Tambah Gudang ===");
+
+         string namaGudang;
+         do
+         {
+            Console.Write("Masukkan Nama Gudang: ");
+            namaGudang = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(namaGudang))
             {
-               Console.WriteLine("Invalid warehouse code. Please enter a valid integer.");
-               Console.Write("Enter Warehouse Code to update: ");
+               Console.WriteLine("Nama Gudang tidak boleh kosong. Silakan masukkan nama yang valid.");
             }
+         } while (string.IsNullOrWhiteSpace(namaGudang));
 
-            var warehouse = warehouseService.GetWarehouse(warehouseCode);
-            if (warehouse == null)
+         var gudangBaru = new Gudang { NamaGudang = namaGudang };
+         warehouseService.AddWarehouse(gudangBaru);
+
+         var gudang = warehouseService.GetWarehouse(gudangBaru.KodeGudang);
+         if (gudang != null)
+         {
+            Console.WriteLine($"Gudang ditambahkan: Kode Gudang: {gudang.KodeGudang}, Nama Gudang: {gudang.NamaGudang}");
+         }
+         else
+         {
+            Console.WriteLine("Gudang tidak ditemukan atau tidak dapat diambil.");
+         }
+      }
+
+      public static void UpdateWarehouse(WarehouseRepo warehouseService)
+      {
+         Console.WriteLine("\n=== Update Gudang ===");
+         Console.Write("Masukkan Kode Gudang yang akan diupdate: ");
+         int kodeGudang;
+         while (!int.TryParse(Console.ReadLine(), out kodeGudang))
+         {
+            Console.WriteLine("Kode gudang tidak valid. Silakan masukkan angka yang valid.");
+            Console.Write("Masukkan Kode Gudang yang akan diupdate: ");
+         }
+
+         var gudang = warehouseService.GetWarehouse(kodeGudang);
+         if (gudang == null)
+         {
+            Console.WriteLine($"Gudang dengan kode {kodeGudang} tidak ditemukan.");
+            return;
+         }
+
+         string namaGudangBaru;
+         do
+         {
+            Console.Write("Masukkan Nama Gudang baru (biarkan kosong untuk mempertahankan nilai saat ini): ");
+            namaGudangBaru = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(namaGudangBaru))
             {
-               Console.WriteLine($"Warehouse with code {warehouseCode} not found.");
-               return;
+               namaGudangBaru = gudang.NamaGudang;
             }
+         } while (string.IsNullOrWhiteSpace(namaGudangBaru));
 
-            string newWarehouseName;
-            do
-            {
-               Console.Write("Enter new Warehouse Name (leave empty to keep current): ");
-               newWarehouseName = Console.ReadLine();
-               if (string.IsNullOrWhiteSpace(newWarehouseName))
-               {
-                     newWarehouseName = warehouse.NamaGudang;
-               }
-            } while (string.IsNullOrWhiteSpace(newWarehouseName));
+         gudang.NamaGudang = namaGudangBaru;
+         warehouseService.UpdateWarehouse(gudang);
 
-            warehouse.NamaGudang = newWarehouseName;
-            warehouseService.UpdateWarehouse(warehouse);
+         Console.WriteLine("Gudang berhasil diupdate.");
+      }
 
-            Console.WriteLine("Warehouse updated successfully.");
-         }
+      public static void RemoveWarehouse(WarehouseRepo warehouseService)
+      {
+         Console.WriteLine("\n=== Hapus Gudang ===");
+         int kodeGudang;
 
-         public static void RemoveWarehouse(WarehouseRepo warehouseService)
+         do
          {
-            Console.WriteLine("\n=== Remove Warehouse ===");
-            int warehouseCode;
-
-            do
-            {
-               Console.Write("Enter Warehouse Code to remove: ");
-               string input = Console.ReadLine();
-
-               if (!int.TryParse(input, out warehouseCode))
-               {
-                     Console.WriteLine("Invalid warehouse code. Please enter a valid integer.");
-               }
-               else
-               {
-                  var warehouse = warehouseService.GetWarehouse(warehouseCode);
-                  if (warehouse == null)
-                  {
-                     Console.WriteLine($"Warehouse with code {warehouseCode} not found.");
-                     return;
-                  }
-               }
-            } while (warehouseCode <= 0);
-
-            warehouseService.RemoveWarehouse(warehouseCode);
-            Console.WriteLine($"Warehouse removed successfully.");
-         }
-
-         public static void AddItem(ItemRepo itemService, WarehouseRepo warehouseService)
-         {
-            Console.WriteLine("\n=== Add Item ===");
-
-            string itemName;
-            decimal itemPrice;
-            int itemQuantity;
-            DateTime expiredDate;
-            int warehouseCode;
-
-            do
-            {
-               Console.Write("Enter Item Name: ");
-               itemName = Console.ReadLine();
-            } while (string.IsNullOrWhiteSpace(itemName));
-
-            do
-            {
-               Console.Write("Enter Item Price: ");
-               string inputPrice = Console.ReadLine();
-               if (!decimal.TryParse(inputPrice, out itemPrice))
-               {
-                  Console.WriteLine("Invalid item price. Please enter a valid decimal number.");
-               }
-            } while (itemPrice <= 0);
-
-            do
-            {
-               Console.Write("Enter Item Quantity: ");
-               string inputQuantity = Console.ReadLine();
-               if (!int.TryParse(inputQuantity, out itemQuantity))
-               {
-                  Console.WriteLine("Invalid item quantity. Please enter a valid integer number.");
-               }
-            } while (itemQuantity <= 0);
-
-            do
-            {
-               Console.Write("Enter Expired Date (YYYY-MM-DD): ");
-               string inputExpiredDate = Console.ReadLine();
-               if (!DateTime.TryParse(inputExpiredDate, out expiredDate))
-               {
-                  Console.WriteLine("Invalid date format. Please enter a valid date in YYYY-MM-DD format.");
-               }
-            } while (expiredDate == DateTime.MinValue);
-
-            bool isValidWarehouse = false;
-            do
-            {
-               Console.Write("Enter Warehouse Code: ");
-               string inputWarehouseCode = Console.ReadLine();
-               if (!int.TryParse(inputWarehouseCode, out warehouseCode))
-               {
-                  Console.WriteLine("Invalid warehouse code. Please enter a valid integer number.");
-                  continue;
-               }
-
-               var warehouse = warehouseService.GetWarehouse(warehouseCode);
-               if (warehouse == null)
-               {
-                  Console.WriteLine($"Warehouse with code {warehouseCode} does not exist.");
-               }
-               else
-               {
-                  isValidWarehouse = true;
-               }
-            } while (!isValidWarehouse);
-
-            var newItem = new Barang
-            {
-               NamaBarang = itemName,
-               HargaBarang = itemPrice,
-               JumlahBarang = itemQuantity,
-               TanggalKadaluarsa = expiredDate,
-               KodeGudang = warehouseCode
-            };
-
-            itemService.AddItem(newItem);
-            Console.WriteLine($"Item added successfully.");
-         }
-
-         public static void GetItem(ItemRepo itemService)
-         {
-            Console.Write("Enter Item Code (leave empty to display all): ");
+            Console.Write("Masukkan Kode Gudang yang akan dihapus: ");
             string input = Console.ReadLine();
 
-            if (string.IsNullOrWhiteSpace(input))
+            if (!int.TryParse(input, out kodeGudang))
             {
-               var items = itemService.GetAllItems();
-               var groupedItems = new Dictionary<int, List<Barang>>();
-
-               foreach (var item in items)
-               {
-                  if (!groupedItems.ContainsKey(item.KodeGudang))
-                  {
-                     groupedItems[item.KodeGudang] = new List<Barang>();
-                  }
-                  groupedItems[item.KodeGudang].Add(item);
-               }
-
-               foreach (var group in groupedItems)
-               {
-                  var warehouseName = group.Value[0].NamaGudang;
-                  Console.WriteLine("\n---------------------");
-                  Console.WriteLine($"Nama Gudang: {warehouseName}");
-                  Console.WriteLine("List Barang:");
-                  foreach (var item in group.Value)
-                  {
-                     Console.WriteLine($"- {item.NamaBarang} ({item.JumlahBarang} pcs)");
-                  }
-                  Console.WriteLine("---------------------");
-               }
-            }
-            else if (int.TryParse(input, out int itemCode))
-            {
-               var item = itemService.GetItem(itemCode);
-               if (item != null)
-               {
-                  Console.WriteLine($"Item Code: {item.KodeBarang}");
-                  Console.WriteLine($"Item Name: {item.NamaBarang}");
-                  Console.WriteLine($"Item Price: {item.HargaBarang}");
-                  Console.WriteLine($"Item Quantity: {item.JumlahBarang}");
-                  Console.WriteLine($"Expired Date: {item.TanggalKadaluarsa.ToString("yyyy-MM-dd")}");
-                  Console.WriteLine($"Warehouse Name: {item.NamaGudang}");
-               }
-               else
-               {
-                  Console.WriteLine("Item not found.");
-               }
+               Console.WriteLine("Kode gudang tidak valid. Silakan masukkan angka yang valid.");
             }
             else
             {
-               Console.WriteLine("Invalid Item Code.");
+               var gudang = warehouseService.GetWarehouse(kodeGudang);
+               if (gudang == null)
+               {
+                  Console.WriteLine($"Gudang dengan kode {kodeGudang} tidak ditemukan.");
+                  return;
+               }
+            }
+         } while (kodeGudang <= 0);
+
+         warehouseService.RemoveWarehouse(kodeGudang);
+         Console.WriteLine($"Gudang berhasil dihapus.");
+      }
+
+      public static void AddItem(ItemRepo itemService, WarehouseRepo warehouseService)
+      {
+         Console.WriteLine("\n=== Tambah Barang ===");
+
+         string namaBarang;
+         decimal hargaBarang;
+         int jumlahBarang;
+         DateTime tanggalKadaluarsa;
+         int kodeGudang;
+
+         do
+         {
+            Console.Write("Masukkan Nama Barang: ");
+            namaBarang = Console.ReadLine();
+         } while (string.IsNullOrWhiteSpace(namaBarang));
+
+         do
+         {
+            Console.Write("Masukkan Harga Barang: ");
+            string inputHarga = Console.ReadLine();
+            if (!decimal.TryParse(inputHarga, out hargaBarang))
+            {
+               Console.WriteLine("Harga barang tidak valid. Silakan masukkan angka desimal yang valid.");
+            }
+         } while (hargaBarang <= 0);
+
+         do
+         {
+            Console.Write("Masukkan Jumlah Barang: ");
+            string inputJumlah = Console.ReadLine();
+            if (!int.TryParse(inputJumlah, out jumlahBarang))
+            {
+               Console.WriteLine("Jumlah barang tidak valid. Silakan masukkan angka integer yang valid.");
+            }
+         } while (jumlahBarang <= 0);
+
+         do
+         {
+            Console.Write("Masukkan Tanggal Kadaluarsa (YYYY-MM-DD): ");
+            string inputTanggalKadaluarsa = Console.ReadLine();
+            if (!DateTime.TryParse(inputTanggalKadaluarsa, out tanggalKadaluarsa))
+            {
+               Console.WriteLine("Format tanggal tidak valid. Silakan masukkan tanggal dalam format YYYY-MM-DD yang benar.");
+            }
+         } while (tanggalKadaluarsa == DateTime.MinValue);
+
+         bool isValidGudang = false;
+         do
+         {
+            Console.Write("Masukkan Kode Gudang: ");
+            string inputKodeGudang = Console.ReadLine();
+            if (!int.TryParse(inputKodeGudang, out kodeGudang))
+            {
+               Console.WriteLine("Kode gudang tidak valid. Silakan masukkan angka integer yang valid.");
+               continue;
+            }
+
+            var gudang = warehouseService.GetWarehouse(kodeGudang);
+            if (gudang == null)
+            {
+               Console.WriteLine($"Gudang dengan kode {kodeGudang} tidak ada.");
+            }
+            else
+            {
+               isValidGudang = true;
+            }
+         } while (!isValidGudang);
+
+         var barangBaru = new Barang
+         {
+            NamaBarang = namaBarang,
+            HargaBarang = hargaBarang,
+            JumlahBarang = jumlahBarang,
+            TanggalKadaluarsa = tanggalKadaluarsa,
+            KodeGudang = kodeGudang
+         };
+
+         itemService.AddItem(barangBaru);
+         Console.WriteLine($"Barang berhasil ditambahkan.");
+      }
+
+      public static void GetItem(ItemRepo itemService)
+      {
+         Console.Write("Masukkan Kode Barang (biarkan kosong untuk menampilkan semua): ");
+         string input = Console.ReadLine();
+
+         if (string.IsNullOrWhiteSpace(input))
+         {
+            var items = itemService.GetAllItems();
+            var groupedItems = new Dictionary<int, List<Barang>>();
+
+            foreach (var item in items)
+            {
+               if (!groupedItems.ContainsKey(item.KodeGudang))
+               {
+                  groupedItems[item.KodeGudang] = new List<Barang>();
+               }
+               groupedItems[item.KodeGudang].Add(item);
+            }
+
+            foreach (var group in groupedItems)
+            {
+               var namaGudang = group.Value[0].NamaGudang;
+               Console.WriteLine("\n---------------------");
+               Console.WriteLine($"Nama Gudang: {namaGudang}");
+               Console.WriteLine("Daftar Barang:");
+               foreach (var item in group.Value)
+               {
+                  Console.WriteLine($"- {item.NamaBarang} ({item.JumlahBarang} pcs)");
+               }
+               Console.WriteLine("---------------------");
+            }
+         }
+         else if (int.TryParse(input, out int kodeBarang))
+         {
+            var item = itemService.GetItem(kodeBarang);
+            if (item != null)
+            {
+               Console.WriteLine($"Kode Barang: {item.KodeBarang}");
+               Console.WriteLine($"Nama Barang: {item.NamaBarang}");
+               Console.WriteLine($"Harga Barang: {item.HargaBarang}");
+               Console.WriteLine($"Jumlah Barang: {item.JumlahBarang}");
+               Console.WriteLine($"Tanggal Kadaluarsa: {item.TanggalKadaluarsa.ToString("yyyy-MM-dd")}");
+               Console.WriteLine($"Nama Gudang: {item.NamaGudang}");
+            }
+            else
+            {
+               Console.WriteLine("Barang tidak ditemukan.");
+            }
+         }
+         else
+         {
+            Console.WriteLine("Kode Barang tidak valid.");
+         }
+      }
+
+      public static void UpdateItem(ItemRepo itemService, WarehouseRepo warehouseService)
+      {
+         Console.WriteLine("\n=== Update Barang ===");
+         Console.Write("Masukkan Kode Barang yang akan diupdate: ");
+         int kodeBarang;
+         while (!int.TryParse(Console.ReadLine(), out kodeBarang))
+         {
+            Console.WriteLine("Input tidak valid. Silakan masukkan Kode Barang yang valid.");
+            Console.Write("Masukkan Kode Barang yang akan diupdate: ");
+         }
+
+         var item = itemService.GetItem(kodeBarang);
+         if (item == null)
+         {
+            Console.WriteLine($"Barang dengan kode {kodeBarang} tidak ditemukan.");
+            return;
+         }
+
+         Console.Write("Masukkan Nama Barang baru (biarkan kosong untuk mempertahankan nilai saat ini): ");
+         string namaBarangBaru = Console.ReadLine();
+
+         decimal hargaBarangBaru = 0;
+         Console.Write("Masukkan Harga Barang baru (biarkan kosong untuk mempertahankan nilai saat ini): ");
+         string inputHarga = Console.ReadLine();
+         if (!string.IsNullOrWhiteSpace(inputHarga))
+         {
+            while (!decimal.TryParse(inputHarga, out hargaBarangBaru) || hargaBarangBaru <= 0)
+            {
+               Console.WriteLine("Input tidak valid. Harga Barang harus berupa angka positif.");
+               Console.Write("Masukkan Harga Barang baru (biarkan kosong untuk mempertahankan nilai saat ini): ");
+               inputHarga = Console.ReadLine();
+            }
+         }
+         else
+         {
+            hargaBarangBaru = item.HargaBarang;
+         }
+
+         int jumlahBarangBaru = 0;
+         Console.Write("Masukkan Jumlah Barang baru (biarkan kosong untuk mempertahankan nilai saat ini): ");
+         string inputJumlah = Console.ReadLine();
+         if (!string.IsNullOrWhiteSpace(inputJumlah))
+         {
+            while (!int.TryParse(inputJumlah, out jumlahBarangBaru) || jumlahBarangBaru <= 0)
+            {
+               Console.WriteLine("Input tidak valid. Jumlah Barang harus berupa angka positif.");
+               Console.Write("Masukkan Jumlah Barang baru (biarkan kosong untuk mempertahankan nilai saat ini): ");
+               inputJumlah = Console.ReadLine();
+            }
+         }
+         else
+         {
+            jumlahBarangBaru = item.JumlahBarang;
+         }
+
+         DateTime? tanggalKadaluarsaBaru = null;
+         Console.Write("Masukkan Tanggal Kadaluarsa baru (YYYY-MM-DD) (biarkan kosong untuk mempertahankan nilai saat ini): ");
+         string inputTanggalKadaluarsa = Console.ReadLine();
+         if (!string.IsNullOrWhiteSpace(inputTanggalKadaluarsa))
+         {
+            while (!DateTime.TryParse(inputTanggalKadaluarsa, out DateTime tempDate))
+            {
+               Console.WriteLine("Input tidak valid. Silakan masukkan tanggal dalam format YYYY-MM-DD yang benar.");
+               Console.Write("Masukkan Tanggal Kadaluarsa baru (YYYY-MM-DD) (biarkan kosong untuk mempertahankan nilai saat ini): ");
+               inputTanggalKadaluarsa = Console.ReadLine();
+            }
+            tanggalKadaluarsaBaru = DateTime.Parse(inputTanggalKadaluarsa);
+         }
+         else
+         {
+            tanggalKadaluarsaBaru = item.TanggalKadaluarsa;
+         }
+
+         int kodeGudangBaru = 0;
+         Console.Write("Masukkan Kode Gudang baru (biarkan kosong untuk mempertahankan nilai saat ini): ");
+         string inputKodeGudang = Console.ReadLine();
+         if (!string.IsNullOrWhiteSpace(inputKodeGudang))
+         {
+            while (!int.TryParse(inputKodeGudang, out kodeGudangBaru) || kodeGudangBaru <= 0)
+            {
+               Console.WriteLine("Input tidak valid. Kode Gudang harus berupa angka positif.");
+               Console.Write("Masukkan Kode Gudang baru (biarkan kosong untuk mempertahankan nilai saat ini): ");
+               inputKodeGudang = Console.ReadLine();
+            }
+         }
+         else
+         {
+            kodeGudangBaru = item.KodeGudang;
+         }
+
+         if (!string.IsNullOrWhiteSpace(namaBarangBaru))
+         {
+            item.NamaBarang = namaBarangBaru;
+         }
+
+         if (hargaBarangBaru > 0)
+         {
+            item.HargaBarang = hargaBarangBaru;
+         }
+
+         if (jumlahBarangBaru > 0)
+         {
+            item.JumlahBarang = jumlahBarangBaru;
+         }
+
+         if (tanggalKadaluarsaBaru != null)
+         {
+            item.TanggalKadaluarsa = tanggalKadaluarsaBaru.Value;
+         }
+
+         if (kodeGudangBaru > 0)
+         {
+            var gudang = warehouseService.GetWarehouse(kodeGudangBaru);
+            if (gudang == null)
+            {
+               Console.WriteLine($"Gudang dengan kode {kodeGudangBaru} tidak ditemukan. Kode Gudang Barang tetap tidak berubah.");
+            }
+            else
+            {
+               item.KodeGudang = kodeGudangBaru;
             }
          }
 
+         itemService.UpdateItem(item);
+         Console.WriteLine($"Barang berhasil diupdate.");
+      }
 
+      public static void RemoveItem(ItemRepo itemService)
+      {
+         Console.WriteLine("\n=== Hapus Barang ===");
+         Console.Write("Masukkan Kode Barang yang akan dihapus: ");
+         int kodeBarang = Convert.ToInt32(Console.ReadLine());
 
-         public static void UpdateItem(ItemRepo itemService, WarehouseRepo warehouseService)
+         var item = itemService.GetItem(kodeBarang);
+         if (item == null)
          {
-            Console.WriteLine("\n=== Update Item ===");
-            Console.Write("Enter Item Code to update: ");
-            int itemCode;
-            while (!int.TryParse(Console.ReadLine(), out itemCode))
-            {
-               Console.WriteLine("Invalid input. Please enter a valid Item Code.");
-               Console.Write("Enter Item Code to update: ");
-            }
-
-            var item = itemService.GetItem(itemCode);
-            if (item == null)
-            {
-               Console.WriteLine($"Item with code {itemCode} not found.");
-               return;
-            }
-
-            Console.Write("Enter new Item Name (leave empty to keep current value): ");
-            string newItemName = Console.ReadLine();
-
-            decimal newItemPrice = 0;
-            Console.Write("Enter new Item Price (leave empty to keep current value): ");
-            string inputPrice = Console.ReadLine();
-            if (!string.IsNullOrWhiteSpace(inputPrice))
-            {
-               while (!decimal.TryParse(inputPrice, out newItemPrice) || newItemPrice <= 0)
-               {
-                     Console.WriteLine("Invalid input. Item Price must be a positive number.");
-                     Console.Write("Enter new Item Price (leave empty to keep current value): ");
-                     inputPrice = Console.ReadLine();
-               }
-            }
-            else
-            {
-               newItemPrice = item.HargaBarang; 
-            }
-
-            int newItemQuantity = 0;
-            Console.Write("Enter new Item Quantity (leave empty to keep current value): ");
-            string inputQuantity = Console.ReadLine();
-            if (!string.IsNullOrWhiteSpace(inputQuantity))
-            {
-               while (!int.TryParse(inputQuantity, out newItemQuantity) || newItemQuantity <= 0)
-               {
-                     Console.WriteLine("Invalid input. Item Quantity must be a positive integer.");
-                     Console.Write("Enter new Item Quantity (leave empty to keep current value): ");
-                     inputQuantity = Console.ReadLine();
-               }
-            }
-            else
-            {
-               newItemQuantity = item.JumlahBarang; 
-            }
-
-            DateTime? newExpiredDate = null;
-            Console.Write("Enter new Expired Date (YYYY-MM-DD) (leave empty to keep current value): ");
-            string inputExpiredDate = Console.ReadLine();
-            if (!string.IsNullOrWhiteSpace(inputExpiredDate))
-            {
-               while (!DateTime.TryParse(inputExpiredDate, out DateTime tempDate))
-               {
-                     Console.WriteLine("Invalid input. Please enter a valid date in the format YYYY-MM-DD.");
-                     Console.Write("Enter new Expired Date (YYYY-MM-DD) (leave empty to keep current value): ");
-                     inputExpiredDate = Console.ReadLine();
-               }
-               newExpiredDate = DateTime.Parse(inputExpiredDate);
-            }
-            else
-            {
-               newExpiredDate = item.TanggalKadaluarsa;
-            }
-
-            int newWarehouseCode = 0;
-            Console.Write("Enter new Warehouse Code (leave empty to keep current value): ");
-            string inputWarehouseCode = Console.ReadLine();
-            if (!string.IsNullOrWhiteSpace(inputWarehouseCode))
-            {
-               while (!int.TryParse(inputWarehouseCode, out newWarehouseCode) || newWarehouseCode <= 0)
-               {
-                     Console.WriteLine("Invalid input. Warehouse Code must be a positive integer.");
-                     Console.Write("Enter new Warehouse Code (leave empty to keep current value): ");
-                     inputWarehouseCode = Console.ReadLine();
-               }
-            }
-            else
-            {
-               newWarehouseCode = item.KodeGudang;
-            }
-
-            if (!string.IsNullOrWhiteSpace(newItemName))
-            {
-               item.NamaBarang = newItemName;
-            }
-
-            if (newItemPrice > 0)
-            {
-               item.HargaBarang = newItemPrice;
-            }
-
-            if (newItemQuantity > 0)
-            {
-               item.JumlahBarang = newItemQuantity;
-            }
-
-            if (newExpiredDate != null)
-            {
-               item.TanggalKadaluarsa = newExpiredDate.Value;
-            }
-
-            if (newWarehouseCode > 0)
-            {
-               var warehouse = warehouseService.GetWarehouse(newWarehouseCode);
-               if (warehouse == null)
-               {
-                     Console.WriteLine($"Warehouse with code {newWarehouseCode} not found. Item Warehouse Code remains unchanged.");
-               }
-               else
-               {
-                     item.KodeGudang = newWarehouseCode;
-               }
-            }
-
-            itemService.UpdateItem(item);
-            Console.WriteLine($"Item updated successfully.");
+            Console.WriteLine($"Barang dengan kode {kodeBarang} tidak ditemukan.");
+            return;
          }
 
-         public static void RemoveItem(ItemRepo itemService)
+         itemService.RemoveItem(kodeBarang);
+         Console.WriteLine($"Barang berhasil dihapus.");
+      }
+
+      public static void GetMonitoringList(MonitoringRepo monitoringService)
+      {
+         Console.WriteLine("\nCATATAN: Daftar barang yang ditampilkan adalah barang-barang yang tanggal kadaluarsanya sudah melewati tanggal yang dimasukkan atau tinggal 14 hari lagi sebelum kadaluarsa.");
+         Console.Write("\nMasukkan Nama Gudang (biarkan kosong untuk menampilkan semua): ");
+         string namaGudang = Console.ReadLine();
+
+         Console.Write("Masukkan Tanggal Referensi (yyyy-MM-dd) (biarkan kosong untuk tanggal hari ini): ");
+         string dateInput = Console.ReadLine();
+         DateTime tanggalReferensi;
+
+         if (string.IsNullOrEmpty(dateInput))
          {
-            Console.WriteLine("\n=== Remove Item ===");
-            Console.Write("Enter Item Code to remove: ");
-            int itemCode = Convert.ToInt32(Console.ReadLine());
-
-            var item = itemService.GetItem(itemCode);
-            if (item == null)
-            {
-               Console.WriteLine($"Item with code {itemCode} not found.");
-               return;
-            }
-
-            itemService.RemoveItem(itemCode);
-            Console.WriteLine($"Item removed successfully.");
+            tanggalReferensi = DateTime.Today;
+         }
+         else if (!DateTime.TryParse(dateInput, out tanggalReferensi))
+         {
+            Console.WriteLine("Format tanggal tidak valid.");
+            return;
          }
 
-         public static void GetMonitoringList(MonitoringRepo monitoringService)
+         var items = monitoringService.GetMonitoringList(string.IsNullOrEmpty(namaGudang) ? null : namaGudang, tanggalReferensi);
+
+         if (items == null || !items.Any())
          {
-            Console.WriteLine("\nNOTE: The list of items displayed are items whose expiry date has passed the date entered or items whose expiry date is only 14 days from the date entered.");
-            Console.Write("\nEnter Warehouse Name (leave empty to display all): ");
-            string warehouseName = Console.ReadLine();
+            Console.WriteLine("Data tidak ditemukan.");
+            return;
+         }
 
-            Console.Write("Enter Reference Date (yyyy-MM-dd) (leave empty for today's date): ");
-            string dateInput = Console.ReadLine();
-            DateTime referenceDate;
+         foreach (var warehouseGroup in items.GroupBy(i => new { i.KodeGudang, i.NamaGudang }))
+         {
+            Console.WriteLine($"\nKode Gudang: {warehouseGroup.Key.KodeGudang ?? "N/A"}");
+            Console.WriteLine($"Nama Gudang: {warehouseGroup.Key.NamaGudang ?? "N/A"}");
+            Console.WriteLine("Daftar Barang Kadaluarsa:");
+            Console.WriteLine("  --------------------------------------------------------");
 
-            if (string.IsNullOrEmpty(dateInput))
+            foreach (var item in warehouseGroup)
             {
-               referenceDate = DateTime.Today;
-            }
-            else if (!DateTime.TryParse(dateInput, out referenceDate))
-            {
-               Console.WriteLine("Invalid date format.");
-               return;
-            }
+               var daysToExpiry = (item.TanggalKadaluarsa - tanggalReferensi).Days;
+               string expiryStatus = daysToExpiry < 0 ? "(sudah kadaluarsa)" : $"({daysToExpiry} hari lagi kadaluarsa)";
 
-            var items = monitoringService.GetMonitoringList(string.IsNullOrEmpty(warehouseName) ? null : warehouseName, referenceDate);
-
-            if (items.Any())
-            {
-               foreach (var item in items)
-               {
-                     Console.WriteLine($"Kode Gudang: {item.KodeGudang}");
-                     Console.WriteLine($"Nama Gudang: {item.NamaGudang}");
-                     Console.WriteLine($"Kode Barang: {item.KodeBarang}");
-                     Console.WriteLine($"Nama Barang: {item.NamaBarang}");
-                     Console.WriteLine($"Jumlah: {item.JumlahBarang}");
-                     
-                     if (item.TanggalKadaluarsa < referenceDate)
-                     {
-                        Console.WriteLine($"Tanggal Kadaluarsa: {item.TanggalKadaluarsa.ToString("yyyy-MM-dd")} (has expired)");
-                     }
-                     else
-                     {
-                        TimeSpan remainingDays = item.TanggalKadaluarsa - referenceDate;
-                        if (remainingDays.TotalDays <= 14)
-                        {
-                              Console.WriteLine($"Tanggal Kadaluarsa: {item.TanggalKadaluarsa.ToString("yyyy-MM-dd")} ({remainingDays.TotalDays} days to expired)");
-                        }
-                        else
-                        {
-                              Console.WriteLine($"Tanggal Kadaluarsa: {item.TanggalKadaluarsa.ToString("yyyy-MM-dd")}");
-                        }
-                     }
-                     
-                     Console.WriteLine();
-               }
+               Console.WriteLine($"  Kode Barang: {item.KodeBarang ?? "N/A"}");
+               Console.WriteLine($"  Nama Barang: {item.NamaBarang ?? "N/A"}");
+               Console.WriteLine($"  Jumlah: {item.JumlahBarang}");
+               Console.WriteLine($"  Tanggal Kadaluarsa: {item.TanggalKadaluarsa:yyyy-MM-dd} {expiryStatus}");
+               Console.WriteLine("  --------------------------------------------------------");
             }
-            else
-            {
-               Console.WriteLine("Data Not Found.");
-            }
+            Console.WriteLine();
          }
       }
    }
+}

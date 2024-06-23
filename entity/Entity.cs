@@ -17,4 +17,15 @@ namespace WarehouseManagement
       public string NamaGudang { get; set; }
    }
 
+   public class MonitoringItem
+   {
+      public string KodeBarang { get; set; }
+      public string NamaBarang { get; set; }
+      public int JumlahBarang { get; set; }
+      public DateTime TanggalKadaluarsa { get; set; }
+      public string KodeGudang { get; set; }
+      public string NamaGudang { get; set; }
+   }
+
+
 }

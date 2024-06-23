@@ -307,20 +307,21 @@ namespace WarehouseManagement
             _connectionString = connectionString;
         }
 
-        public IEnumerable<Barang> GetMonitoringList(string warehouseName, DateTime referenceDate)
+        public IEnumerable<MonitoringItem> GetMonitoringList(string warehouseName, DateTime referenceDate)
         {
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 var query = @"
-                    SELECT b.KodeBarang, b.NamaBarang, b.HargaBarang, b.JumlahBarang, b.TanggalKadaluarsa, g.KodeGudang, g.NamaGudang 
+                    SELECT b.KodeBarang, b.NamaBarang, b.JumlahBarang, b.TanggalKadaluarsa, 
+                        g.KodeGudang, g.NamaGudang 
                     FROM Barang b
                     JOIN Gudang g ON b.KodeGudang = g.KodeGudang
-                    WHERE (@WarehouseName IS NULL OR LOWER(g.NamaGudang) LIKE '%' || LOWER(@WarehouseName) || '%')
-                    AND (b.TanggalKadaluarsa <= @ReferenceDate OR b.TanggalKadaluarsa <= @ReferenceDate + INTERVAL '14 day')";
-                return connection.Query<Barang>(
-                    query,
-                    new { WarehouseName = warehouseName, ReferenceDate = referenceDate }
-                ).ToList();
+                    WHERE (LOWER(g.NamaGudang) LIKE '%' || LOWER(COALESCE(@WarehouseName, '')) || '%')
+                    AND (b.TanggalKadaluarsa <= @ReferenceDate OR b.TanggalKadaluarsa <= (@ReferenceDate::DATE + INTERVAL '14 day'))";
+
+                var parameters = new { WarehouseName = (object)warehouseName ?? DBNull.Value, ReferenceDate = referenceDate };
+
+                return connection.Query<MonitoringItem>(query, parameters).ToList();
             }
         }
     }

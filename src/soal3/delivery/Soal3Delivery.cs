@@ -18,19 +18,19 @@ namespace WarehouseManagement
          {
                Console.Clear();
 
-               Console.WriteLine("=== Warehouse Management Console App ===");
-               Console.WriteLine("1. Add Warehouse");
-               Console.WriteLine("2. View Warehouse");
-               Console.WriteLine("3. Update Warehouse");
-               Console.WriteLine("4. Remove Warehouse");
-               Console.WriteLine("5. Add Item");
-               Console.WriteLine("6. View Item");
-               Console.WriteLine("7. Update Item");
-               Console.WriteLine("8. Remove Item");
-               Console.WriteLine("9. Get Monitoring List");
-               Console.WriteLine("10. Exit");
+               Console.WriteLine("=== Aplikasi Konsol Manajemen Gudang ===");
+               Console.WriteLine("1. Add Gudang");
+               Console.WriteLine("2. Get Gudang");
+               Console.WriteLine("3. Update Gudang");
+               Console.WriteLine("4. Delete Gudang");
+               Console.WriteLine("5. Add Barang");
+               Console.WriteLine("6. Get Barang");
+               Console.WriteLine("7. Update Barang");
+               Console.WriteLine("8. Delete Barang");
+               Console.WriteLine("9. List Monitoring");
+               Console.WriteLine("10. Keluar");
                Console.WriteLine("----------------------------------------");
-               Console.Write("Enter your choice (1-10): ");
+               Console.Write("Masukkan pilihan Anda (1-10): ");
 
                string choice = Console.ReadLine();
 
@@ -64,14 +64,14 @@ namespace WarehouseManagement
                      Usecase.GetMonitoringList(monitoringService);
                      break;
                   case "10":
-                     Console.WriteLine("Exiting...");
+                     Console.WriteLine("Keluar...");
                      return;
                   default:
-                     Console.WriteLine("Invalid choice. Please enter a number from 1 to 10.");
+                     Console.WriteLine("Pilihan tidak valid. Silakan masukkan angka dari 1 sampai 10.");
                      break;
                }
 
-               Console.WriteLine("\nPress any key to continue...");
+               Console.WriteLine("\nTekan tombol apa saja untuk melanjutkan...");
                Console.ReadKey();
          }
       }
