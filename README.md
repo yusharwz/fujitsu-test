@@ -10,4 +10,6 @@
 
 #### 3. Harap selalu baca Intruksi dan catatan pada aplikasi konsol yang berjalan.
 
-##### website portofolio: https://www.yusharwz.my.id/
+##### website portofolio: https://www.yusharwz.my.id
+
+##### CV: https://www.yusharwz.my.id/CV-Yushar Wahidin Zamzam.pdf
