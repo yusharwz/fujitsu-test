@@ -21,11 +21,11 @@ namespace WarehouseManagement
     }
 
 
-    public class WarehouseService
+    public class WarehouseRepo
     {
         private readonly string _connectionString;
 
-        public WarehouseService(string connectionString)
+        public WarehouseRepo(string connectionString)
         {
             _connectionString = connectionString;
         }
@@ -144,11 +144,11 @@ namespace WarehouseManagement
     }
 
 
-    public class ItemService
+    public class ItemRepo
     {
         private readonly string _connectionString;
 
-        public ItemService(string connectionString)
+        public ItemRepo(string connectionString)
         {
             _connectionString = connectionString;
         }
@@ -249,11 +249,11 @@ namespace WarehouseManagement
     }
 
 
-    public class MonitoringService
+    public class MonitoringRepo
     {
         private readonly string _connectionString;
 
-        public MonitoringService(string connectionString)
+        public MonitoringRepo(string connectionString)
         {
             _connectionString = connectionString;
         }

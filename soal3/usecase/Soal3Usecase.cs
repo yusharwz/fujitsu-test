@@ -3,12 +3,12 @@ using System.Linq;
 
 namespace WarehouseManagement
 {
-    partial class Program
-    {
-        static class Operations
-        {
+   partial class Program
+   {
+      public class Usecase
+      {
 
-            public static void GetWarehouse(WarehouseService warehouseService)
+            public static void GetWarehouse(WarehouseRepo warehouseService)
             {
                Console.Write("Enter Warehouse Code (leave empty to display all): ");
                string input = Console.ReadLine();
@@ -39,36 +39,36 @@ namespace WarehouseManagement
                }
             }
 
-            public static void AddWarehouse(WarehouseService warehouseService)
+            public static void AddWarehouse(WarehouseRepo warehouseService)
             {
-                Console.WriteLine("\n=== Add Warehouse ===");
+               Console.WriteLine("\n=== Add Warehouse ===");
 
-                string warehouseName;
-                do
-                {
-                    Console.Write("Enter Warehouse Name: ");
-                    warehouseName = Console.ReadLine();
-                    if (string.IsNullOrWhiteSpace(warehouseName))
-                    {
-                        Console.WriteLine("Warehouse name cannot be empty. Please enter a valid name.");
-                    }
-                } while (string.IsNullOrWhiteSpace(warehouseName));
+               string warehouseName;
+               do
+               {
+                  Console.Write("Enter Warehouse Name: ");
+                  warehouseName = Console.ReadLine();
+                  if (string.IsNullOrWhiteSpace(warehouseName))
+                  {
+                     Console.WriteLine("Warehouse name cannot be empty. Please enter a valid name.");
+                  }
+               } while (string.IsNullOrWhiteSpace(warehouseName));
 
-                var newWarehouse = new Gudang { NamaGudang = warehouseName };
-                warehouseService.AddWarehouse(newWarehouse);
+               var newWarehouse = new Gudang { NamaGudang = warehouseName };
+               warehouseService.AddWarehouse(newWarehouse);
 
-                var warehouse = warehouseService.GetWarehouse(newWarehouse.KodeGudang);
-                if (warehouse != null)
-                {
-                    Console.WriteLine($"Added Warehouse: WarehouseCode: {warehouse.KodeGudang}, WarehouseName: {warehouse.NamaGudang}");
-                }
-                else
-                {
-                    Console.WriteLine("Warehouse not found or could not be retrieved.");
-                }
+               var warehouse = warehouseService.GetWarehouse(newWarehouse.KodeGudang);
+               if (warehouse != null)
+               {
+                  Console.WriteLine($"Added Warehouse: WarehouseCode: {warehouse.KodeGudang}, WarehouseName: {warehouse.NamaGudang}");
+               }
+               else
+               {
+                  Console.WriteLine("Warehouse not found or could not be retrieved.");
+               }
             }
 
-            public static void UpdateWarehouse(WarehouseService warehouseService)
+            public static void UpdateWarehouse(WarehouseRepo warehouseService)
             {
                Console.WriteLine("\n=== Update Warehouse ===");
                Console.Write("Enter Warehouse Code to update: ");
@@ -103,117 +103,117 @@ namespace WarehouseManagement
                Console.WriteLine("Warehouse updated successfully.");
             }
 
-            public static void RemoveWarehouse(WarehouseService warehouseService)
+            public static void RemoveWarehouse(WarehouseRepo warehouseService)
             {
-                Console.WriteLine("\n=== Remove Warehouse ===");
-                int warehouseCode;
+               Console.WriteLine("\n=== Remove Warehouse ===");
+               int warehouseCode;
 
-                do
-                {
-                    Console.Write("Enter Warehouse Code to remove: ");
-                    string input = Console.ReadLine();
+               do
+               {
+                  Console.Write("Enter Warehouse Code to remove: ");
+                  string input = Console.ReadLine();
 
-                    if (!int.TryParse(input, out warehouseCode))
-                    {
+                  if (!int.TryParse(input, out warehouseCode))
+                  {
                         Console.WriteLine("Invalid warehouse code. Please enter a valid integer.");
-                    }
-                    else
-                    {
-                        var warehouse = warehouseService.GetWarehouse(warehouseCode);
-                        if (warehouse == null)
-                        {
-                            Console.WriteLine($"Warehouse with code {warehouseCode} not found.");
-                            return;
-                        }
-                    }
-                } while (warehouseCode <= 0);
+                  }
+                  else
+                  {
+                     var warehouse = warehouseService.GetWarehouse(warehouseCode);
+                     if (warehouse == null)
+                     {
+                        Console.WriteLine($"Warehouse with code {warehouseCode} not found.");
+                        return;
+                     }
+                  }
+               } while (warehouseCode <= 0);
 
-                warehouseService.RemoveWarehouse(warehouseCode);
-                Console.WriteLine($"Warehouse removed successfully.");
+               warehouseService.RemoveWarehouse(warehouseCode);
+               Console.WriteLine($"Warehouse removed successfully.");
             }
 
-            public static void AddItem(ItemService itemService, WarehouseService warehouseService)
+            public static void AddItem(ItemRepo itemService, WarehouseRepo warehouseService)
             {
-                Console.WriteLine("\n=== Add Item ===");
+               Console.WriteLine("\n=== Add Item ===");
 
-                string itemName;
-                decimal itemPrice;
-                int itemQuantity;
-                DateTime expiredDate;
-                int warehouseCode;
+               string itemName;
+               decimal itemPrice;
+               int itemQuantity;
+               DateTime expiredDate;
+               int warehouseCode;
 
-                do
-                {
-                    Console.Write("Enter Item Name: ");
-                    itemName = Console.ReadLine();
-                } while (string.IsNullOrWhiteSpace(itemName));
+               do
+               {
+                  Console.Write("Enter Item Name: ");
+                  itemName = Console.ReadLine();
+               } while (string.IsNullOrWhiteSpace(itemName));
 
-                do
-                {
-                    Console.Write("Enter Item Price: ");
-                    string inputPrice = Console.ReadLine();
-                    if (!decimal.TryParse(inputPrice, out itemPrice))
-                    {
-                        Console.WriteLine("Invalid item price. Please enter a valid decimal number.");
-                    }
-                } while (itemPrice <= 0);
+               do
+               {
+                  Console.Write("Enter Item Price: ");
+                  string inputPrice = Console.ReadLine();
+                  if (!decimal.TryParse(inputPrice, out itemPrice))
+                  {
+                     Console.WriteLine("Invalid item price. Please enter a valid decimal number.");
+                  }
+               } while (itemPrice <= 0);
 
-                do
-                {
-                    Console.Write("Enter Item Quantity: ");
-                    string inputQuantity = Console.ReadLine();
-                    if (!int.TryParse(inputQuantity, out itemQuantity))
-                    {
-                        Console.WriteLine("Invalid item quantity. Please enter a valid integer number.");
-                    }
-                } while (itemQuantity <= 0);
+               do
+               {
+                  Console.Write("Enter Item Quantity: ");
+                  string inputQuantity = Console.ReadLine();
+                  if (!int.TryParse(inputQuantity, out itemQuantity))
+                  {
+                     Console.WriteLine("Invalid item quantity. Please enter a valid integer number.");
+                  }
+               } while (itemQuantity <= 0);
 
-                do
-                {
-                    Console.Write("Enter Expired Date (YYYY-MM-DD): ");
-                    string inputExpiredDate = Console.ReadLine();
-                    if (!DateTime.TryParse(inputExpiredDate, out expiredDate))
-                    {
-                        Console.WriteLine("Invalid date format. Please enter a valid date in YYYY-MM-DD format.");
-                    }
-                } while (expiredDate == DateTime.MinValue);
+               do
+               {
+                  Console.Write("Enter Expired Date (YYYY-MM-DD): ");
+                  string inputExpiredDate = Console.ReadLine();
+                  if (!DateTime.TryParse(inputExpiredDate, out expiredDate))
+                  {
+                     Console.WriteLine("Invalid date format. Please enter a valid date in YYYY-MM-DD format.");
+                  }
+               } while (expiredDate == DateTime.MinValue);
 
-                bool isValidWarehouse = false;
-                do
-                {
-                    Console.Write("Enter Warehouse Code: ");
-                    string inputWarehouseCode = Console.ReadLine();
-                    if (!int.TryParse(inputWarehouseCode, out warehouseCode))
-                    {
-                        Console.WriteLine("Invalid warehouse code. Please enter a valid integer number.");
-                        continue;
-                    }
+               bool isValidWarehouse = false;
+               do
+               {
+                  Console.Write("Enter Warehouse Code: ");
+                  string inputWarehouseCode = Console.ReadLine();
+                  if (!int.TryParse(inputWarehouseCode, out warehouseCode))
+                  {
+                     Console.WriteLine("Invalid warehouse code. Please enter a valid integer number.");
+                     continue;
+                  }
 
-                    var warehouse = warehouseService.GetWarehouse(warehouseCode);
-                    if (warehouse == null)
-                    {
-                        Console.WriteLine($"Warehouse with code {warehouseCode} does not exist.");
-                    }
-                    else
-                    {
-                        isValidWarehouse = true;
-                    }
-                } while (!isValidWarehouse);
+                  var warehouse = warehouseService.GetWarehouse(warehouseCode);
+                  if (warehouse == null)
+                  {
+                     Console.WriteLine($"Warehouse with code {warehouseCode} does not exist.");
+                  }
+                  else
+                  {
+                     isValidWarehouse = true;
+                  }
+               } while (!isValidWarehouse);
 
-                var newItem = new Barang
-                {
-                    NamaBarang = itemName,
-                    HargaBarang = itemPrice,
-                    JumlahBarang = itemQuantity,
-                    TanggalKadaluarsa = expiredDate,
-                    KodeGudang = warehouseCode
-                };
+               var newItem = new Barang
+               {
+                  NamaBarang = itemName,
+                  HargaBarang = itemPrice,
+                  JumlahBarang = itemQuantity,
+                  TanggalKadaluarsa = expiredDate,
+                  KodeGudang = warehouseCode
+               };
 
-                itemService.AddItem(newItem);
-                Console.WriteLine($"Item added successfully.");
+               itemService.AddItem(newItem);
+               Console.WriteLine($"Item added successfully.");
             }
 
-            public static void GetItem(ItemService itemService)
+            public static void GetItem(ItemRepo itemService)
             {
                Console.Write("Enter Item Code: ");
                if (int.TryParse(Console.ReadLine(), out int itemCode))
@@ -240,7 +240,7 @@ namespace WarehouseManagement
             }
 
 
-            public static void UpdateItem(ItemService itemService, WarehouseService warehouseService)
+            public static void UpdateItem(ItemRepo itemService, WarehouseRepo warehouseService)
             {
                Console.WriteLine("\n=== Update Item ===");
                Console.Write("Enter Item Code to update: ");
@@ -367,63 +367,60 @@ namespace WarehouseManagement
                Console.WriteLine($"Item updated successfully.");
             }
 
-            public static void RemoveItem(ItemService itemService)
+            public static void RemoveItem(ItemRepo itemService)
             {
-                Console.WriteLine("\n=== Remove Item ===");
-                Console.Write("Enter Item Code to remove: ");
-                int itemCode = Convert.ToInt32(Console.ReadLine());
+               Console.WriteLine("\n=== Remove Item ===");
+               Console.Write("Enter Item Code to remove: ");
+               int itemCode = Convert.ToInt32(Console.ReadLine());
 
-                var item = itemService.GetItem(itemCode);
-                if (item == null)
-                {
-                    Console.WriteLine($"Item with code {itemCode} not found.");
-                    return;
-                }
+               var item = itemService.GetItem(itemCode);
+               if (item == null)
+               {
+                  Console.WriteLine($"Item with code {itemCode} not found.");
+                  return;
+               }
 
-                itemService.RemoveItem(itemCode);
-                Console.WriteLine($"Item removed successfully.");
+               itemService.RemoveItem(itemCode);
+               Console.WriteLine($"Item removed successfully.");
             }
 
-            public static void GetMonitoringList(MonitoringService monitoringService)
+            public static void GetMonitoringList(MonitoringRepo monitoringService)
             {
-                Console.WriteLine("\n=== Get Monitoring List ===");
-                Console.Write("Enter Warehouse Name (leave empty for all): ");
-                string warehouseName = Console.ReadLine();
-                if (string.IsNullOrWhiteSpace(warehouseName))
-                {
-                    warehouseName = null;
-                }
+               Console.WriteLine("\n=== Get Monitoring List ===");
+               Console.Write("Enter Warehouse Name (leave empty for all): ");
+               string warehouseName = Console.ReadLine();
+               if (string.IsNullOrWhiteSpace(warehouseName))
+               {
+                  warehouseName = null;
+               }
 
-                DateTime? expiredDate = null;
-                Console.Write("Enter Expired Date (YYYY-MM-DD) (leave empty for all): ");
-                string expiredDateString = Console.ReadLine();
-                if (string.IsNullOrWhiteSpace(expiredDateString))
-                {
-                    expiredDate = DateTime.Now;
-                }
-                else
-                {
-                    expiredDate = DateTime.Parse(expiredDateString);
-                }
+               DateTime? expiredDate = null;
+               Console.Write("Enter Expired Date (YYYY-MM-DD) (leave empty for all): ");
+               string expiredDateString = Console.ReadLine();
+               if (string.IsNullOrWhiteSpace(expiredDateString))
+               {
+                  expiredDate = DateTime.Now;
+               }
+               else
+               {
+                  expiredDate = DateTime.Parse(expiredDateString);
+               }
 
-                // Debugging output
-                Console.WriteLine($"Debug: Executing query with WarehouseName: {warehouseName} and ExpiredDate: {expiredDate}");
+               var monitoringList = monitoringService.GetMonitoringList(warehouseName, expiredDate ?? DateTime.Now);
 
-                var monitoringList = monitoringService.GetMonitoringList(warehouseName, expiredDate ?? DateTime.Now);
-
-                if (monitoringList != null && monitoringList.Any())
-                {
-                    Console.WriteLine("\nMonitoring List:");
-                    foreach (var item in monitoringList)
-                    {
-                        Console.WriteLine($"{item.NamaBarang} - {item.TanggalKadaluarsa:yyyy-MM-dd}");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("No items found matching the criteria.");
-                }
+               if (monitoringList != null && monitoringList.Any())
+               {
+                  Console.WriteLine("\nMonitoring List:");
+                  foreach (var item in monitoringList)
+                  {
+                     Console.WriteLine($"{item.NamaBarang} - {item.TanggalKadaluarsa:yyyy-MM-dd}");
+                  }
+               }
+               else
+               {
+                  Console.WriteLine("No items found matching the criteria.");
+               }
             }
-        }
-    }
+      }
+   }
 }
