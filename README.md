@@ -1,3 +1,5 @@
-Jawaban Soal NO. 1,2, dan 3 ada pada folder src
+Answer to Question NO. 1,2, and 3 are in the src folder
 
-Database Menggunakan postgresql (semua query dan kode yang konek ke db menggunakan postgresql)
+Database uses PostgresQL (all queries and code that connect to the DB use PostgresQL)
+
+Please always read the Instructions and notes on the running console application

@@ -414,39 +414,59 @@ namespace WarehouseManagement
 
          public static void GetMonitoringList(MonitoringRepo monitoringService)
          {
-            Console.WriteLine("\n=== Get Monitoring List ===");
-            Console.Write("Enter Warehouse Name (leave empty for all): ");
+            Console.WriteLine("\nNOTE: The list of items displayed are items whose expiry date has passed the date entered or items whose expiry date is only 14 days from the date entered.");
+            Console.Write("\nEnter Warehouse Name (leave empty to display all): ");
             string warehouseName = Console.ReadLine();
-            if (string.IsNullOrWhiteSpace(warehouseName))
+
+            Console.Write("Enter Reference Date (yyyy-MM-dd) (leave empty for today's date): ");
+            string dateInput = Console.ReadLine();
+            DateTime referenceDate;
+
+            if (string.IsNullOrEmpty(dateInput))
             {
-               warehouseName = null;
+               referenceDate = DateTime.Today;
+            }
+            else if (!DateTime.TryParse(dateInput, out referenceDate))
+            {
+               Console.WriteLine("Invalid date format.");
+               return;
             }
 
-            DateTime? expiredDate = null;
-            Console.Write("Enter Expired Date (YYYY-MM-DD) (Default Current Time): ");
-            string expiredDateString = Console.ReadLine();
-            if (string.IsNullOrWhiteSpace(expiredDateString))
-            {
-               expiredDate = DateTime.Now;
-            }
-            else
-            {
-               expiredDate = DateTime.Parse(expiredDateString);
-            }
+            var items = monitoringService.GetMonitoringList(string.IsNullOrEmpty(warehouseName) ? null : warehouseName, referenceDate);
 
-            var monitoringList = monitoringService.GetMonitoringList(warehouseName, expiredDate ?? DateTime.Now);
-
-            if (monitoringList != null && monitoringList.Any())
+            if (items.Any())
             {
-               Console.WriteLine("\nMonitoring List:");
-               foreach (var item in monitoringList)
+               foreach (var item in items)
                {
-                  Console.WriteLine($"{item.NamaBarang} - {item.TanggalKadaluarsa:yyyy-MM-dd}");
+                     Console.WriteLine($"Kode Gudang: {item.KodeGudang}");
+                     Console.WriteLine($"Nama Gudang: {item.NamaGudang}");
+                     Console.WriteLine($"Kode Barang: {item.KodeBarang}");
+                     Console.WriteLine($"Nama Barang: {item.NamaBarang}");
+                     Console.WriteLine($"Jumlah: {item.JumlahBarang}");
+                     
+                     if (item.TanggalKadaluarsa < referenceDate)
+                     {
+                        Console.WriteLine($"Tanggal Kadaluarsa: {item.TanggalKadaluarsa.ToString("yyyy-MM-dd")} (has expired)");
+                     }
+                     else
+                     {
+                        TimeSpan remainingDays = item.TanggalKadaluarsa - referenceDate;
+                        if (remainingDays.TotalDays <= 14)
+                        {
+                              Console.WriteLine($"Tanggal Kadaluarsa: {item.TanggalKadaluarsa.ToString("yyyy-MM-dd")} ({remainingDays.TotalDays} days to expired)");
+                        }
+                        else
+                        {
+                              Console.WriteLine($"Tanggal Kadaluarsa: {item.TanggalKadaluarsa.ToString("yyyy-MM-dd")}");
+                        }
+                     }
+                     
+                     Console.WriteLine();
                }
             }
             else
             {
-               Console.WriteLine("No items found matching the criteria.");
+               Console.WriteLine("Data Not Found.");
             }
          }
       }
