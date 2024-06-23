@@ -69,7 +69,6 @@ VALUES
 ('Gudang H'),
 ('Gudang I'),
 ('Gudang J');
-
 INSERT INTO Barang (NamaBarang, HargaBarang, JumlahBarang, TanggalKadaluarsa, KodeGudang) 
 VALUES 
 ('Pena', 1.50, 100, '2020-12-31', 1), 
