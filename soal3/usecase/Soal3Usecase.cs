@@ -213,21 +213,34 @@ namespace WarehouseManagement
 
          public static void GetItem(ItemRepo itemService)
          {
-            Console.Write("Enter Item Code (leave empty to display all items): ");
+            Console.Write("Enter Item Code (leave empty to display all): ");
             string input = Console.ReadLine();
 
             if (string.IsNullOrWhiteSpace(input))
             {
                var items = itemService.GetAllItems();
+               var groupedItems = new Dictionary<int, List<Barang>>();
+
                foreach (var item in items)
                {
-                  Console.WriteLine($"Item Code: {item.KodeBarang}");
-                  Console.WriteLine($"Item Name: {item.NamaBarang}");
-                  Console.WriteLine($"Item Price: {item.HargaBarang}");
-                  Console.WriteLine($"Item Quantity: {item.JumlahBarang}");
-                  Console.WriteLine($"Expired Date: {item.TanggalKadaluarsa.ToString("yyyy-MM-dd")}");
-                  Console.WriteLine($"Warehouse Code: {item.KodeGudang}");
-                  Console.WriteLine("----------------------------------------");
+                  if (!groupedItems.ContainsKey(item.KodeGudang))
+                  {
+                     groupedItems[item.KodeGudang] = new List<Barang>();
+                  }
+                  groupedItems[item.KodeGudang].Add(item);
+               }
+
+               foreach (var group in groupedItems)
+               {
+                  var warehouseName = group.Value[0].NamaGudang;
+                  Console.WriteLine("\n---------------------");
+                  Console.WriteLine($"Nama Gudang: {warehouseName}");
+                  Console.WriteLine("List Barang:");
+                  foreach (var item in group.Value)
+                  {
+                     Console.WriteLine($"- {item.NamaBarang} ({item.JumlahBarang} pcs)");
+                  }
+                  Console.WriteLine("---------------------");
                }
             }
             else if (int.TryParse(input, out int itemCode))
@@ -240,11 +253,11 @@ namespace WarehouseManagement
                   Console.WriteLine($"Item Price: {item.HargaBarang}");
                   Console.WriteLine($"Item Quantity: {item.JumlahBarang}");
                   Console.WriteLine($"Expired Date: {item.TanggalKadaluarsa.ToString("yyyy-MM-dd")}");
-                  Console.WriteLine($"Warehouse Code: {item.KodeGudang}");
+                  Console.WriteLine($"Warehouse Name: {item.NamaGudang}");
                }
                else
                {
-                     Console.WriteLine("Item not found.");
+                  Console.WriteLine("Item not found.");
                }
             }
             else

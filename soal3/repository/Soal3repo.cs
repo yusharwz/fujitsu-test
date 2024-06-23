@@ -6,20 +6,21 @@ using Npgsql;
 
 namespace WarehouseManagement
 {
-    public class Gudang
-    {
-        public int KodeGudang { get; set; }
-        public string NamaGudang { get; set; } = string.Empty;
-    }
-
     public class Barang
     {
         public int KodeBarang { get; set; }
-        public string NamaBarang { get; set; } = string.Empty;
+        public string NamaBarang { get; set; }
         public decimal HargaBarang { get; set; }
         public int JumlahBarang { get; set; }
         public DateTime TanggalKadaluarsa { get; set; }
         public int KodeGudang { get; set; }
+        public string NamaGudang { get; set; }
+    }
+
+    public class Gudang
+    {
+        public int KodeGudang { get; set; }
+        public string NamaGudang { get; set; }
     }
 
     public class WarehouseRepo
@@ -183,21 +184,78 @@ namespace WarehouseManagement
 
         public IEnumerable<Barang> GetAllItems()
         {
-            using (IDbConnection db = new Npgsql.NpgsqlConnection(_connectionString))
+            var items = new List<Barang>();
+
+            using (var connection = new NpgsqlConnection(_connectionString))
             {
-                string query = "SELECT * FROM Barang ORDER BY KodeGudang ASC";
-                return db.Query<Barang>(query);
+                connection.Open();
+                var query = @"
+                    SELECT b.KodeBarang, b.NamaBarang, b.HargaBarang, b.JumlahBarang, b.TanggalKadaluarsa, b.KodeGudang, g.NamaGudang
+                    FROM Barang b
+                    INNER JOIN Gudang g ON b.KodeGudang = g.KodeGudang
+                    ORDER BY g.KodeGudang ASC, b.KodeBarang ASC";
+
+                using (var command = new NpgsqlCommand(query, connection))
+                {
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var item = new Barang
+                            {
+                                KodeBarang = reader.GetInt32(0),
+                                NamaBarang = reader.GetString(1),
+                                HargaBarang = reader.GetDecimal(2),
+                                JumlahBarang = reader.GetInt32(3),
+                                TanggalKadaluarsa = reader.GetDateTime(4),
+                                KodeGudang = reader.GetInt32(5),
+                                NamaGudang = reader.GetString(6)
+                            };
+                            items.Add(item);
+                        }
+                    }
+                }
             }
+
+            return items;
         }
 
         public Barang GetItem(int itemCode)
         {
+            Barang item = null;
+
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 connection.Open();
-                var query = "SELECT * FROM Barang WHERE KodeBarang = @ItemCode";
-                return connection.QuerySingleOrDefault<Barang>(query, new { ItemCode = itemCode });
+                var query = @"
+                    SELECT b.KodeBarang, b.NamaBarang, b.HargaBarang, b.JumlahBarang, b.TanggalKadaluarsa, b.KodeGudang, g.NamaGudang
+                    FROM Barang b
+                    INNER JOIN Gudang g ON b.KodeGudang = g.KodeGudang
+                    WHERE b.KodeBarang = @ItemCode";
+
+                using (var command = new NpgsqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("ItemCode", itemCode);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            item = new Barang
+                            {
+                                KodeBarang = reader.GetInt32(0),
+                                NamaBarang = reader.GetString(1),
+                                HargaBarang = reader.GetDecimal(2),
+                                JumlahBarang = reader.GetInt32(3),
+                                TanggalKadaluarsa = reader.GetDateTime(4),
+                                KodeGudang = reader.GetInt32(5),
+                                NamaGudang = reader.GetString(6)
+                            };
+                        }
+                    }
+                }
             }
+            return item;
         }
 
         public void UpdateItem(Barang item)
