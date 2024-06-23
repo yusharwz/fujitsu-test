@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("test-fujitsu")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b59fd96b617b910ac82a3067cbc0e3ae2c5cb4c8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+22bdcfd9ad86f2b95db19bbdce2ab2c08bd69d7a")]
 [assembly: System.Reflection.AssemblyProductAttribute("test-fujitsu")]
 [assembly: System.Reflection.AssemblyTitleAttribute("test-fujitsu")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

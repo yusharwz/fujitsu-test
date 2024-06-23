@@ -5,7 +5,7 @@ namespace WarehouseManagement
 {
    public class Delivery
    {
-      public static void Deliver(string[] args)
+      public static void Menu(string[] args)
       {
          Env.Load();
          string connectionString = $"Host={Env.GetString("DATABASE_HOST")};Database={Env.GetString("DATABASE_NAME")};Username={Env.GetString("DATABASE_USER")};Password={Env.GetString("DATABASE_PASSWORD")}";

@@ -6,7 +6,7 @@ namespace WarehouseManagement
    {
       static void Main(string[] args)
       {
-            Delivery.Deliver(args);
+            Delivery.Menu(args);
       }
    }
 }
