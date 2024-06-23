@@ -9,3 +9,5 @@
 #### 2. Database menggunakan postgresql (semua query dan kode yang konek ke db menggunakan postgresql).
 
 #### 3. Harap selalu baca Intruksi dan catatan pada aplikasi konsol yang berjalan.
+
+##### website portofolio: https://www.yusharwz.my.id/
