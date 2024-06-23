@@ -89,11 +89,11 @@ namespace WarehouseManagement
                string newWarehouseName;
                do
                {
-                  Console.Write("Enter new Warehouse Name: ");
+                  Console.Write("Enter new Warehouse Name (leave empty to keep current): ");
                   newWarehouseName = Console.ReadLine();
                   if (string.IsNullOrWhiteSpace(newWarehouseName))
                   {
-                        Console.WriteLine("New warehouse name cannot be empty. Please enter a valid name.");
+                        newWarehouseName = warehouse.NamaGudang;
                   }
                } while (string.IsNullOrWhiteSpace(newWarehouseName));
 
@@ -102,7 +102,6 @@ namespace WarehouseManagement
 
                Console.WriteLine("Warehouse updated successfully.");
             }
-
 
             public static void RemoveWarehouse(WarehouseService warehouseService)
             {

@@ -30,3 +30,4 @@ C:\Users\YUSHAR\Documents\Golang\Golang-Fundamental\Incubation Enigma Camp\test-
 C:\Users\YUSHAR\Documents\Golang\Golang-Fundamental\Incubation Enigma Camp\test-fujitsu\bin\Debug\net8.0\Microsoft.Extensions.Primitives.dll
 C:\Users\YUSHAR\Documents\Golang\Golang-Fundamental\Incubation Enigma Camp\test-fujitsu\bin\Debug\net8.0\Npgsql.dll
 C:\Users\YUSHAR\Documents\Golang\Golang-Fundamental\Incubation Enigma Camp\test-fujitsu\bin\Debug\net8.0\Sprache.dll
+C:\Users\YUSHAR\Documents\Golang\Golang-Fundamental\Incubation Enigma Camp\test-fujitsu\obj\Debug\net8.0\test-fujitsu.sourcelink.json
