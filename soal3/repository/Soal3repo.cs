@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Data;
 using Dapper;
 using Npgsql;
 
@@ -176,6 +178,15 @@ namespace WarehouseManagement
                         throw;
                     }
                 }
+            }
+        }
+
+        public IEnumerable<Barang> GetAllItems()
+        {
+            using (IDbConnection db = new Npgsql.NpgsqlConnection(_connectionString))
+            {
+                string query = "SELECT * FROM Barang ORDER BY KodeGudang ASC";
+                return db.Query<Barang>(query);
             }
         }
 

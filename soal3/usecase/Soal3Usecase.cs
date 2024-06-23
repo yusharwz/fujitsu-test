@@ -213,18 +213,34 @@ namespace WarehouseManagement
 
          public static void GetItem(ItemRepo itemService)
          {
-            Console.Write("Enter Item Code: ");
-            if (int.TryParse(Console.ReadLine(), out int itemCode))
+            Console.Write("Enter Item Code (leave empty to display all items): ");
+            string input = Console.ReadLine();
+
+            if (string.IsNullOrWhiteSpace(input))
+            {
+               var items = itemService.GetAllItems();
+               foreach (var item in items)
+               {
+                  Console.WriteLine($"Item Code: {item.KodeBarang}");
+                  Console.WriteLine($"Item Name: {item.NamaBarang}");
+                  Console.WriteLine($"Item Price: {item.HargaBarang}");
+                  Console.WriteLine($"Item Quantity: {item.JumlahBarang}");
+                  Console.WriteLine($"Expired Date: {item.TanggalKadaluarsa.ToString("yyyy-MM-dd")}");
+                  Console.WriteLine($"Warehouse Code: {item.KodeGudang}");
+                  Console.WriteLine("----------------------------------------");
+               }
+            }
+            else if (int.TryParse(input, out int itemCode))
             {
                var item = itemService.GetItem(itemCode);
                if (item != null)
                {
-                     Console.WriteLine($"Item Code: {item.KodeBarang}");
-                     Console.WriteLine($"Item Name: {item.NamaBarang}");
-                     Console.WriteLine($"Item Price: {item.HargaBarang}");
-                     Console.WriteLine($"Item Quantity: {item.JumlahBarang}");
-                     Console.WriteLine($"Expired Date: {item.TanggalKadaluarsa.ToString("yyyy-MM-dd")}");
-                     Console.WriteLine($"Warehouse Code: {item.KodeGudang}");
+                  Console.WriteLine($"Item Code: {item.KodeBarang}");
+                  Console.WriteLine($"Item Name: {item.NamaBarang}");
+                  Console.WriteLine($"Item Price: {item.HargaBarang}");
+                  Console.WriteLine($"Item Quantity: {item.JumlahBarang}");
+                  Console.WriteLine($"Expired Date: {item.TanggalKadaluarsa.ToString("yyyy-MM-dd")}");
+                  Console.WriteLine($"Warehouse Code: {item.KodeGudang}");
                }
                else
                {
@@ -236,6 +252,7 @@ namespace WarehouseManagement
                Console.WriteLine("Invalid Item Code.");
             }
          }
+
 
 
          public static void UpdateItem(ItemRepo itemService, WarehouseRepo warehouseService)

@@ -59,6 +59,10 @@
               "target": "Package",
               "version": "[1.0.4, )"
             },
+            "System.Data.Common": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
             "System.Data.SqlClient": {
               "target": "Package",
               "version": "[4.8.6, )"
